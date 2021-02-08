@@ -15,45 +15,36 @@
  *    }
  */
 
-import { LOAD_REPOS, LOAD_REPOS_SUCCESS, LOAD_REPOS_ERROR } from './constants';
+import {
+  LOAD_HEROS,
+  GET_FAVOURITE_HEROS,
+  ADD_FAVOURITE_HERO,
+  REMOVE_FAVOURITE_HERO,
+} from './constants';
 
-/**
- * Load the repositories, this action starts the request saga
- *
- * @return {object} An action object with a type of LOAD_REPOS
- */
-export function loadRepos() {
+export function loadHeros(name) {
   return {
-    type: LOAD_REPOS,
+    type: LOAD_HEROS,
+    name,
   };
 }
 
-/**
- * Dispatched when the repositories are loaded by the request saga
- *
- * @param  {array} repos The repository data
- * @param  {string} username The current username
- *
- * @return {object}      An action object with a type of LOAD_REPOS_SUCCESS passing the repos
- */
-export function reposLoaded(repos, username) {
+export function getFavourites() {
   return {
-    type: LOAD_REPOS_SUCCESS,
-    repos,
-    username,
+    type: GET_FAVOURITE_HEROS,
   };
 }
 
-/**
- * Dispatched when loading the repositories fails
- *
- * @param  {object} error The error
- *
- * @return {object}       An action object with a type of LOAD_REPOS_ERROR passing the error
- */
-export function repoLoadingError(error) {
+export function addFavouriteHero(id) {
   return {
-    type: LOAD_REPOS_ERROR,
-    error,
+    type: ADD_FAVOURITE_HERO,
+    id,
+  };
+}
+
+export function removeFavouriteHero(id) {
+  return {
+    type: REMOVE_FAVOURITE_HERO,
+    id,
   };
 }
