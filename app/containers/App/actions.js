@@ -17,6 +17,7 @@
 
 import {
   LOAD_HEROS,
+  LOAD_CAROUSEL,
   GET_FAVOURITE_HEROS,
   ADD_FAVOURITE_HERO,
   REMOVE_FAVOURITE_HERO,
@@ -27,6 +28,12 @@ export function loadHeros(name) {
     type: LOAD_HEROS,
     name,
   };
+}
+
+export function loadCarousel() {
+  return {
+    type: LOAD_CAROUSEL,
+  }
 }
 
 export function getFavourites() {

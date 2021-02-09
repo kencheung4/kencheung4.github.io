@@ -8,7 +8,7 @@ import React, { useEffect, memo } from 'react';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
-import { Row, Col, Spin, Alert, message, Input, Typography } from 'antd';
+import { Row, Col, Carousel, Alert, message, Input, Typography, Space } from 'antd';
 
 const { Search } = Input;
 const { Text } = Typography;
@@ -17,15 +17,16 @@ import { useInjectSaga } from 'utils/injectSaga';
 
 import CommonLayout from 'components/CommonLayout';
 import LoadingIndicator from 'components/LoadingIndicator';
+import CarouselItem from 'components/CarouselItem';
 
 import HeroItem from 'containers/HeroItem';
-import { loadHeros } from '../App/actions';
+import { loadHeros, loadCarousel } from '../App/actions';
 
 import saga from '../App/saga';
 
 const defaultSearch = 'man';
 
-export function MainPage({ loadHeros, heroData }) {
+export function MainPage({ loadHeros, loadCarousel, heroData, carouselData }) {
   useInjectSaga({ key: 'global', saga });
 
   const { loading, error, items } = heroData;
@@ -33,14 +34,26 @@ export function MainPage({ loadHeros, heroData }) {
 
   useEffect(() => {
     loadHeros(search);
+    loadCarousel();
   }, [search]);
 
   const onSearch = value => setSearch(value);
 
+  console.log("carouselData.items", carouselData.items);
+
   return (
     <CommonLayout page="main">
-      <Search placeholder="input hero name" onSearch={onSearch} enterButton />  
+
+      <Carousel autoplay>
+        {carouselData && carouselData.items.map(item => (
+          <CarouselItem {...item} />
+        ))}
+      </Carousel>
+
+      <Search style={{ marginTop: 16, marginBottom: 8 }} placeholder="input hero name" onSearch={onSearch} enterButton />  
+
       <Text> Search results for: {search}</Text>
+
       { !!error 
         && <Alert
             message="Error"
@@ -71,11 +84,13 @@ MainPage.propTypes = {};
 
 const mapStateToProps = state => ({
   heroData: state.global.herosData,
+  carouselData: state.global.carouselData,
 });
 
 export function mapDispatchToProps(dispatch) {
   return {
     loadHeros: name => dispatch(loadHeros(name)),
+    loadCarousel: () => dispatch(loadCarousel()),
     addFavouriteHero: id => dispatch(addFavouriteHero(id)),
   };
 }

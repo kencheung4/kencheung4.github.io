@@ -22,3 +22,8 @@ export const ADD_FAVOURITE_HERO =
 
 export const REMOVE_FAVOURITE_HERO =
   'superheroweb-kencheung/App/REMOVE_FAVOURITE_HERO';
+
+export const LOAD_CAROUSEL = 'superheroweb-kencheung/App/LOAD_CAROUSEL';
+export const LOAD_CAROUSEL_SUCCESS =
+  'superheroweb-kencheung/App/LOAD_CAROUSEL_SUCCESS';
+export const LOAD_CAROUSEL_ERROR = 'superheroweb-kencheung/App/LOAD_CAROUSEL_ERROR';

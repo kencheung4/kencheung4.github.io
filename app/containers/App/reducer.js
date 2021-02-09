@@ -12,6 +12,9 @@ import {
   LOAD_HEROS,
   LOAD_HEROS_SUCCESS,
   LOAD_HEROS_ERROR,
+  LOAD_CAROUSEL,
+  LOAD_CAROUSEL_SUCCESS,
+  LOAD_CAROUSEL_ERROR,
   GET_FAVOURITE_HEROS,
   ADD_FAVOURITE_HERO,
   REMOVE_FAVOURITE_HERO,
@@ -19,6 +22,11 @@ import {
 
 // The initial state of the App
 export const initialState = {
+  carouselData: {
+    items: [],
+    loading: false,
+    error: null,
+  },
   herosData: {
     items: [],
     loading: false,
@@ -33,8 +41,25 @@ export const initialState = {
 const appReducer = (state = initialState, action) =>
   produce(state, draft => {
     switch (action.type) {
+      case LOAD_CAROUSEL:
+        draft.carouselData.loading = true;
+        draft.carouselData.error = false;
+        draft.carouselData.items = [];
+        break;
+
+      case LOAD_CAROUSEL_SUCCESS:
+        draft.carouselData.loading = false;
+        draft.carouselData.error = null;
+        draft.carouselData.items = action.data;
+        break;
+
+      case LOAD_CAROUSEL_ERROR:
+        draft.carouselData.loading = false;
+        draft.carouselData.error = action.error;
+        draft.carouselData.items = [];
+        break;
+
       case LOAD_HEROS:
-        console.log('LOAD heros');
         draft.herosData.loading = true;
         draft.herosData.error = false;
         draft.herosData.items = [];
