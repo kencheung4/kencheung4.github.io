@@ -1,11 +1,4 @@
-/*
- * MainPage
- *
- * This is the first thing users see of our App, at the '/' route
- */
-
-import React, { useEffect, memo } from 'react';
-import PropTypes from 'prop-types';
+import React, { useEffect, useCallback, memo } from 'react';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -18,29 +11,46 @@ import { useInjectSaga } from 'utils/injectSaga';
 
 import CommonLayout from 'components/CommonLayout';
 import HeroItem from 'containers/HeroItem';
+import Reorderable from 'components/Reorderable';
 
 import { getFavourites } from '../App/actions';
 
 import saga from '../App/saga';
 
 export function FavouritePage({ getFavourites, items }) {
+
+  const [sortableItems, setSortableItems] = React.useState(items || []);
+
   useInjectSaga({ key: 'global', saga });
 
   useEffect(() => {
     getFavourites();
   }, []);
 
+  useEffect(() => {
+    setSortableItems(items);
+  }, [items]);
+
+  const handleMoveHeroItem = useCallback((dragIndex, hoverIndex) => {
+    let newItems = [...sortableItems];
+    let deletedItems = newItems.splice(dragIndex, 1);
+    newItems.splice(hoverIndex, 0, deletedItems[0]);
+    setSortableItems(newItems);
+  }, [sortableItems]);
+
   return (
     <CommonLayout page="favourites">
       <Title level={2}>My favourite heros</Title>
       <Row gutter={[16, 16]}>
-        {items && items.length > 0
-          ? items.map(item => (
+        {sortableItems && sortableItems.length > 0
+          ? sortableItems.map((item, index) => (
             <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={3}>
-              <HeroItem
-                {...item}
-                onRemove={(id, name) => message.success(`removed ${name}`)}
-              />
+              <Reorderable key={index} itemPosition={index} moveItem={handleMoveHeroItem}>
+                <HeroItem
+                  {...item}
+                  onRemove={(id, name) => message.success(`removed ${name}`)}
+                />
+              </Reorderable>
             </Col>
           ))
           : <Text type="secondary">No record! Back to <Link to="/">Search</Link></Text>

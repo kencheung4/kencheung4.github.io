@@ -18,6 +18,9 @@ import history from 'utils/history';
 import 'sanitize.css/sanitize.css';
 import 'antd/dist/antd.css';
 
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
+
 // Import root app
 import App from 'containers/App';
 
@@ -48,7 +51,9 @@ const render = messages => {
   ReactDOM.render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <App />
+        <DndProvider backend={HTML5Backend}>
+          <App />
+        </DndProvider>
       </ConnectedRouter>
     </Provider>,
     MOUNT_NODE,

@@ -4,7 +4,7 @@
  * This is the first thing users see of our App, at the '/' route
  */
 
-import React, { useEffect, memo } from 'react';
+import React, { useEffect, useCallback, memo } from 'react';
 
 import { connect } from 'react-redux';
 import { compose } from 'redux';
@@ -18,6 +18,7 @@ import { useInjectSaga } from 'utils/injectSaga';
 import CommonLayout from 'components/CommonLayout';
 import LoadingIndicator from 'components/LoadingIndicator';
 import CarouselItem from 'components/CarouselItem';
+import Reorderable from 'components/Reorderable';
 
 import HeroItem from 'containers/HeroItem';
 import { loadHeros, loadCarousel } from '../App/actions';
@@ -31,15 +32,25 @@ export function MainPage({ loadHeros, loadCarousel, heroData, carouselData }) {
 
   const { loading, error, items } = heroData;
   const [search, setSearch] = React.useState(defaultSearch);
+  const [sortableItems, setSortableItems] = React.useState(items || []);
 
   useEffect(() => {
     loadHeros(search);
     loadCarousel();
   }, [search]);
 
-  const onSearch = value => setSearch(value);
+  useEffect(() => {
+    setSortableItems(items);
+  }, [items]);
 
-  console.log("carouselData.items", carouselData.items);
+  const handleMoveHeroItem = useCallback((dragIndex, hoverIndex) => {
+    let newItems = [...sortableItems];
+    let deletedItems = newItems.splice(dragIndex, 1);
+    newItems.splice(hoverIndex, 0, deletedItems[0]);
+    setSortableItems(newItems);
+  }, [sortableItems]);
+
+  const onSearch = value => setSearch(value);
 
   return (
     <CommonLayout page="main">
@@ -50,28 +61,30 @@ export function MainPage({ loadHeros, loadCarousel, heroData, carouselData }) {
         ))}
       </Carousel>
 
-      <Search style={{ marginTop: 16, marginBottom: 8 }} placeholder="input hero name" onSearch={onSearch} enterButton />  
+      <Search style={{ marginTop: 16, marginBottom: 8 }} placeholder="input hero name" onSearch={onSearch} enterButton />
 
       <Text> Search results for: {search}</Text>
 
-      { !!error 
+      { !!error
         && <Alert
-            message="Error"
-            description="Error Loading Heros"
-            type="error"
+          message="Error"
+          description="Error Loading Heros"
+          type="error"
         />
-        }
+      }
       { loading ?
         <LoadingIndicator />
         : <Row gutter={[16, 16]}>
-          {items &&
-            items.map(item => (
+          {sortableItems &&
+            sortableItems.map((item, index) => (
               <Col xs={24} sm={12} md={8} lg={6} xl={4} xxl={3}>
-                <HeroItem 
-                    {...item} 
-                    onAdd={(id, name) => message.success(`added ${name}`)} 
+                <Reorderable key={index} itemPosition={index} moveItem={handleMoveHeroItem}>
+                  <HeroItem
+                    {...item}
+                    onAdd={(id, name) => message.success(`added ${name}`)}
                     onRemove={(id, name) => message.success(`removed ${name}`)}
-                />
+                  />
+                </Reorderable>
               </Col>
             ))}
         </Row>
