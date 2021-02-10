@@ -34,7 +34,7 @@ const Reorderable = ({ itemPosition, moveItem, children }) => {
     drag(drop(ref));
 
     return (
-        <div ref={ref}>
+        <div className="reorderable" ref={ref}>
             {children}
         </div>
     );
