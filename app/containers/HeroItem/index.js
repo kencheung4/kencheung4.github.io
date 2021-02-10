@@ -44,6 +44,7 @@ export function HeroItem(props) {
 const mapStateToProps = (state, ownProps) => ({
   isFav:
     state.global.favouritesData &&
+    state.global.favouritesData.items && 
     state.global.favouritesData.items.filter(item => item.id == ownProps.id)
       .length > 0,
 });
