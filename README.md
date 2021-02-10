@@ -1,3 +1,11 @@
+## Site
+
+Visit the built site [here](https://kencheung4.github.io/)
+
+This project is started with [react-boilerplate](https://github.com/react-boilerplate/react-boilerplate)
+
+## React boilerplate
+
 <img src="https://raw.githubusercontent.com/react-boilerplate/react-boilerplate-brand/master/assets/banner-metal-optimized.jpg" alt="react boilerplate banner" align="center" />
 
 <br />
